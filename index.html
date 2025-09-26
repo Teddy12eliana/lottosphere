@@ -5,24 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LottoSphere Ultimate + SportsSphere</title>
 <style>
-body{margin:0;padding:0;font-family:'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;}
-h1,h2,h3{text-align:center;color:#7fff7f;margin:0.5em 0;}
-.container{width:90%;max-width:1200px;margin:auto;padding:1em;}
-.section{background:rgba(255,255,255,0.05);margin:1em 0;padding:1em;border-radius:10px;}
-table{width:100%;border-collapse:collapse;margin-top:1em;}
-th,td{border:1px solid #7fff7f;padding:0.5em;text-align:center;}
-button{padding:0.5em 1em;margin:0.5em;background:#7fff7f;color:#000;border:none;border-radius:5px;cursor:pointer;}
-canvas{display:block;margin:auto;}
-input{padding:0.5em;margin:0.3em;border-radius:5px;border:none;}
-#channel-buttons button{background:#ff7f50;color:#000;}
-#login-section{display:flex;flex-direction:column;align-items:center;}
+/* --- GENERAL STYLING --- */
+body {
+  margin:0; padding:0; font-family:'Segoe UI',sans-serif;
+  background:#0a0f1a; color:#e0e0e0;
+}
+h1,h2,h3 {text-align:center; color:#00bfff; margin:0.5em 0;}
+.container {width:95%; max-width:1400px; margin:auto; padding:1em;}
+.section {background:rgba(10,15,26,0.85); margin:1em 0; padding:1em; border-radius:15px; box-shadow:0 0 20px rgba(0,191,255,0.3);}
+table {width:100%; border-collapse:collapse; margin-top:1em;}
+th, td {border:1px solid #00bfff; padding:0.5em; text-align:center;}
+button {padding:0.5em 1em; margin:0.5em; background:#001f3f; color:#00bfff; border:none; border-radius:8px; cursor:pointer; transition:0.3s; font-weight:bold;}
+button:hover {background:#005f9e; color:#fff;}
+canvas {display:block; margin:auto;}
+input {padding:0.5em; margin:0.3em; border-radius:5px; border:none; background:#001f3f; color:#00bfff;}
+#channel-buttons button {background:#001f3f; color:#00bfff; margin:0.3em;}
+#login-section {display:flex; flex-direction:column; align-items:center;}
 </style>
 </head>
 <body>
 <div class="container">
+
 <h1>LottoSphere Ultimate + SportsSphere</h1>
 
-<!-- Membership System -->
+<!-- MEMBERSHIP -->
 <div class="section" id="login-section">
 <h2>Membership System</h2>
 <div id="auth-area">
@@ -37,7 +43,7 @@ input{padding:0.5em;margin:0.3em;border-radius:5px;border:none;}
 </div>
 </div>
 
-<!-- Lottery Section -->
+<!-- LOTTERY -->
 <div class="section" id="lottery-section">
 <h2>Lottery Analyzer</h2>
 <label for="lottery-select">Select Lottery:</label>
@@ -56,7 +62,7 @@ input{padding:0.5em;margin:0.3em;border-radius:5px;border:none;}
 <canvas id="lottery-chart" width="600" height="300"></canvas>
 </div>
 
-<!-- Sports Section -->
+<!-- SPORTS -->
 <div class="section" id="sports-section">
 <h2>Sports Dashboard</h2>
 <label for="league-select">Select League:</label>
@@ -72,21 +78,22 @@ input{padding:0.5em;margin:0.3em;border-radius:5px;border:none;}
 <table id="sports-table"><thead><tr><th>Date</th><th>Match</th><th>Score</th><th>Win Prob.</th></tr></thead><tbody></tbody></table>
 </div>
 
-<!-- Channels Section -->
+<!-- CHANNELS -->
 <div class="section" id="channels-section">
 <h2>Available Channels</h2>
 <div id="channel-buttons">
-<button onclick="openChannel('https://www.apple.com/apple-tv-plus/')">Apple TV</button>
-<button onclick="openChannel('https://www.hulu.com/')">Hulu</button>
-<button onclick="openChannel('https://tv.youtube.com/')">YouTube TV</button>
-<button onclick="openChannel('https://www.netflix.com/')">Netflix</button>
-<button onclick="openChannel('https://www.disneyplus.com/')">Disney+</button>
-</div>
+<button onclick="adminChannelLogin('Apple TV')">Apple TV</button>
+<button onclick="adminChannelLogin('Hulu')">Hulu</button>
+<button onclick="adminChannelLogin('YouTube TV')">YouTube TV</button>
+<button onclick="adminChannelLogin('Netflix')">Netflix</button>
+<button onclick="adminChannelLogin('Disney+')">Disney+</button>
 </div>
 </div>
 
+</div>
+
 <script>
-// ----- MEMBERSHIP SYSTEM -----
+// MEMBERSHIP
 function signup(){
   const u=document.getElementById('username').value.trim();
   const p=document.getElementById('password').value.trim();
@@ -103,7 +110,11 @@ function signin(){
   if(data && data.password===p){localStorage.setItem('currentUser',u); showWelcome(u);}
   else{alert('Invalid username/password');}
 }
-function logout(){localStorage.removeItem('currentUser');document.getElementById('auth-area').style.display='flex';document.getElementById('welcome-area').style.display='none';}
+function logout(){
+  localStorage.removeItem('currentUser');
+  document.getElementById('auth-area').style.display='flex';
+  document.getElementById('welcome-area').style.display='none';
+}
 function showWelcome(u){
   const data=JSON.parse(localStorage.getItem('user_'+u));
   document.getElementById('user-name').innerText=u;
@@ -112,7 +123,7 @@ function showWelcome(u){
   document.getElementById('welcome-area').style.display='block';
 }
 
-// ----- FULL HISTORICAL LOTTERY DATA -----
+// LOTTERY DATA
 const lotteryData={
 powerball:[{date:'2025-09-24',numbers:'5,12,22,32,48 Powerball:9'},{date:'2025-09-21',numbers:'2,14,29,40,55 Powerball:11'},{date:'2025-09-17',numbers:'6,18,28,44,53 Powerball:2'}],
 megamilions:[{date:'2025-09-24',numbers:'3,15,22,34,48 Mega:7'},{date:'2025-09-21',numbers:'1,14,19,33,50 Mega:10'},{date:'2025-09-17',numbers:'5,17,28,41,54 Mega:5'}],
@@ -124,7 +135,10 @@ lotto649:[{date:'2025-09-24',numbers:'1,9,17,28,33,41'},{date:'2025-09-21',numbe
 
 function renderLotteryTable(lottery){
   const tbody=document.querySelector('#lottery-table tbody'); tbody.innerHTML='';
-  lotteryData[lottery].forEach(draw=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${draw.date}</td><td>${draw.numbers}</td>`;tbody.appendChild(tr);});
+  lotteryData[lottery].forEach(draw=>{
+    const tr=document.createElement('tr'); tr.innerHTML=`<td>${draw.date}</td><td>${draw.numbers}</td>`;
+    tbody.appendChild(tr);
+  });
   renderLotteryChart(lottery);
 }
 
@@ -132,23 +146,21 @@ function renderLotteryChart(lottery){
   const canvas=document.getElementById('lottery-chart'); const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height);
   const numbers={}; lotteryData[lottery].forEach(draw=>{draw.numbers.split(/,|Powerball:|Mega:|Cash4Life:|Stars:/).forEach(n=>{const num=n.trim();if(num){numbers[num]=(numbers[num]||0)+1;}});});
   const keys=Object.keys(numbers); const values=keys.map(k=>numbers[k]); const maxVal=Math.max(...values);
-  keys.forEach((k,i)=>{const height=(values[i]/maxVal)*200;ctx.fillStyle='#7fff7f';ctx.fillRect(50+i*30,250-height,20,height);ctx.fillStyle='#fff';ctx.fillText(k,50+i*30,270);});
+  keys.forEach((k,i)=>{const height=(values[i]/maxVal)*200;ctx.fillStyle='#00bfff';ctx.fillRect(50+i*30,250-height,20,height);ctx.fillStyle='#e0e0e0';ctx.fillText(k,50+i*30,270);});
 }
 
 function generateNumbers(){
   const lottery=document.getElementById('lottery-select').value;
   const nums=lotteryData[lottery][Math.floor(Math.random()*lotteryData[lottery].length)].numbers;
-  // Add points for generating numbers
   const u=localStorage.getItem('currentUser');
   if(u){const data=JSON.parse(localStorage.getItem('user_'+u));data.points+=10;localStorage.setItem('user_'+u,JSON.stringify(data));document.getElementById('user-points').innerText=data.points;}
   alert(`Your smart pick for ${lottery.toUpperCase()}: ${nums}`);
 }
-
 document.getElementById('lottery-select').addEventListener('change',e=>{renderLotteryTable(e.target.value);});
 renderLotteryTable('powerball');
 
-// ----- LIVE SPORTS DATA + AI PREDICTIONS -----
-const SPORTSDB_API_KEY='123';
+// SPORTS API PLACEHOLDER
+const SPORTSDB_API_KEY='123'; // free key
 
 async function fetchLiveScores(league){
   const tbody=document.querySelector('#sports-table tbody'); tbody.innerHTML='<tr><td colspan="4">Loading live scores...</td></tr>';
@@ -160,19 +172,23 @@ async function fetchLiveScores(league){
     tbody.innerHTML='';
     events.forEach(event=>{
       const home=event.strHomeTeam; const away=event.strAwayTeam; const score=`${event.intHomeScore||'-'}-${event.intAwayScore||'-'}`;
-      // AI-style simple prediction based on past score
       let homeProb=Math.floor(Math.random()*50+25); let awayProb=100-homeProb;
       const tr=document.createElement('tr'); tr.innerHTML=`<td>${event.dateEvent}</td><td>${home} vs ${away}</td><td>${score}</td><td>${homeProb}% - ${awayProb}%</td>`;
       tbody.appendChild(tr);
     });
-  }catch(err){tbody.innerHTML='<tr><td colspan="4">Error fetching live data. Check API key & network.</td></tr>';console.error(err);}
+  }catch(err){tbody.innerHTML='<tr><td colspan="4">Error fetching live data.</td></tr>';console.error(err);}
 }
-
 document.getElementById('league-select').addEventListener('change',e=>{fetchLiveScores(e.target.value);});
 fetchLiveScores('nba');
 
-// ----- CHANNELS -----
-function openChannel(url){window.open(url,'_blank');}
+// CHANNELS ADMIN LOGIN
+function adminChannelLogin(channel){
+  const u=prompt(`Admin login for ${channel}. Enter username:`,'');
+  const p=prompt('Enter password:','');
+  const data=JSON.parse(localStorage.getItem('user_'+u));
+  if(data && data.password===p){alert(`Access granted to ${channel}`);}
+  else{alert('Access denied');}
+}
 </script>
 </body>
 </html>
